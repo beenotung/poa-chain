@@ -1,30 +1,43 @@
 import { join } from 'path'
 import { readJSONSync } from './fs'
-import { generateKeyPair } from './key'
+import { generateKeyPair, readKeySync } from './key'
 import { writeFileSync } from 'fs'
+import { start } from './core'
 
 async function main() {
-  for (let i = 2; i < process.argv.length; i++) {
+  let i = 2
+  function getFile() {
+    i++
+    let file = process.argv[i]
+    if (!file) {
+      console.error('Error: Missing filename in argument')
+      process.exit(1)
+    }
+    return file
+  }
+  for (; i < process.argv.length; i++) {
     let arg = process.argv[i]
     if (arg == 'keygen') {
-      i++
-      let file = process.argv[i]
-      if (!file) {
-        console.error('Error: Missing filename in argument')
-        process.exit(1)
-      }
+      let file = getFile()
       generateKey(file)
-      process.exit(0)
+      return
+    }
+    if (arg == 'start') {
+      let file = getFile()
+      let key = readKeySync(file)
+      start(key)
+      return
     }
     if (arg == 'help') {
       help()
-      process.exit(0)
+      return
     }
-    console.log({ i, arg })
+
+    console.error('Error: Invalid argument: ' + JSON.stringify(arg))
+    process.exit(1)
   }
   console.error('Error: missing action in argument.')
   help()
-  process.exit(0)
 }
 
 function help() {
@@ -36,14 +49,15 @@ ${name} v${version}
 Usage: action [options]
 
 Actions:
-  keygen [file] - generate private key
+  keygen [keyFile] - generate private key
+  start [keyFile] - start the node with the specified key as identity
   help - display help message
 `)
 }
 
 function generateKey(file: string) {
-  let { pem } = generateKeyPair()
-  writeFileSync(file, pem)
+  let { str } = generateKeyPair()
+  writeFileSync(file, str)
 }
 
 main().catch(e => console.error(e))
