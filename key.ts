@@ -1,6 +1,8 @@
 import { readFileSync } from 'fs'
 import forge from 'node-forge'
 
+export type Key = forge.pki.ed25519.Key
+
 export function generateKeyPair() {
   for (;;) {
     let { publicKey, privateKey } = forge.pki.ed25519.generateKeyPair()
@@ -14,7 +16,7 @@ export function generateKeyPair() {
   }
 }
 
-export function encodeKey(key: forge.pki.ed25519.NativeBuffer) {
+export function encodeKey(key: Key) {
   let base64 = forge.util.binary.base64.encode(key)
   let match = base64.match(/^(.+)==$/)
   if (!match) throw new Error('Invalid base64: ' + base64)
