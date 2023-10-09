@@ -1,7 +1,23 @@
 {
   "name": "poa-chain",
   "version": "0.0.0",
-  "description": "",
+  "description": "A reuseable federated blockchain developed in Typescript",
+  "keywords": [
+    "poa",
+    "proof-of-authority",
+    "permission",
+    "permissioned",
+    "blockchain",
+    "federated",
+    "easy",
+    "typescript"
+  ],
+  "author": {
+    "name": "Beeno Tung",
+    "email": "aabbcc1241@yahoo.com.hk",
+    "url": "https://beeno-tung.surge.sh"
+  },
+  "license": "BSD-2-Clause",
   "main": "index.js",
   "scripts": {
     "test": "tsc --noEmit",
